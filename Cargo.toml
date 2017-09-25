@@ -1,0 +1,14 @@
+[package]
+name = "btree_index"
+version = "0.1.0"
+description = "A one-to-many index datastructure"
+readme = "README.mkd"
+license = "MIT/Apache-2.0"
+keywords = ["data-structures", "collection"]
+repository = "https://github.com/bwhmather/rust-btree-index"
+authors = ["Ben Mather <bwhmather@bwhmather.com>"]
+
+[lib]
+doctest = false
+
+[dependencies]
