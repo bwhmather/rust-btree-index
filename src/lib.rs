@@ -47,61 +47,67 @@ pub struct ValueSet<'a, K: 'a, V: 'a> {
     values: btree_set::Range<'a, (K, V)>,
 }
 
-impl<K, V> BTreeIndex<K, V> {
+impl<K: Ord, V: Ord> BTreeIndex<K, V> {
     pub fn new() -> BTreeIndex<K, V> {
-        unimplemented!();
+        return BTreeIndex {
+            set: btree_set::BTreeSet::new(),
+        }
     }
 
-    pub fn clean(&mut self) {
-        unimplemented!();
+    pub fn clear(&mut self) {
+        self.set.clear();
     }
 
     pub fn get<'a>(&'a self, key: K) -> ValueSet<'a, K, V> {
         unimplemented!();
     }
 
-    pub fn insert(&mut self, key: K, value: V) {
-        unimplemented!();
+    pub fn insert(&mut self, key: K, value: V) -> bool {
+        return self.set.insert((key, value));
     }
 
-    pub fn remove(&mut self, key: K, value: V) {
-        unimplemented!();
+    pub fn remove<Q: ?Sized, R: ?Sized>(&mut self, key: K, value: V) -> bool
+    where K: Borrow<Q>, V: Borrow<R>, Q: Ord, R: Ord {
+        return self.set.remove(&(key, value));
     }
-}
 
-impl<K, V> BTreeIndex<K, V> {
     pub fn iter(&self) -> Iter<K, V> {
-        unimplemented!();
+        return Iter {
+            iter: self.set.iter(),
+        };
     }
 
     pub fn keys<'a>(&'a self) -> Keys<'a, K, V> {
-        unimplemented!();
+        return Keys {
+            iter: self.set.iter(),
+        };
     }
 
     pub fn values<'a>(&'a self) -> Values<'a, K, V> {
-        unimplemented!();
+        return Values {
+            iter: self.set.iter(),
+        };
     }
 
     pub fn len(&self) -> usize {
-        unimplemented!();
+        return self.set.len();
     }
 
     pub fn is_empty(&self) -> bool {
-        unimplemented!();
+        return self.set.is_empty();
     }
 }
 
-impl<K, V> Default for BTreeIndex<K, V> {
+impl<K: Ord, V: Ord> Default for BTreeIndex<K, V> {
     fn default() -> BTreeIndex<K, V> {
-        unimplemented!();
+        return BTreeIndex::new();
     }
 }
 
-impl<K, V> Extend<(K, V)> for BTreeIndex<K, V>
-where K: Ord {
+impl<K: Ord, V: Ord> Extend<(K, V)> for BTreeIndex<K, V> {
     fn extend<T>(&mut self, iter: T)
     where T: IntoIterator<Item = (K, V)> {
-        unimplemented!();
+        self.set.extend(iter);
     }
 }
 
@@ -113,13 +119,12 @@ where K: Copy + Ord, V: Copy {
     }
 }
 
-impl<'a, K, V> IntoIterator for &'a BTreeIndex<K, V>
-where K: 'a, V: 'a {
+impl<'a, K: 'a + Ord, V: 'a + Ord> IntoIterator for &'a BTreeIndex<K, V> {
     type Item = (&'a K, &'a V);
     type IntoIter = Iter<'a, K, V>;
 
     fn into_iter(self) -> Iter<'a, K, V> {
-        unimplemented!();
+        return self.iter();
     }
 }
 
@@ -128,7 +133,9 @@ impl<K, V> IntoIterator for BTreeIndex<K, V> {
     type IntoIter = IntoIter<K, V>;
 
     fn into_iter(self) -> IntoIter<K, V> {
-        unimplemented!();
+        return IntoIter {
+            iter: self.set.into_iter(),
+        };
     }
 }
 
